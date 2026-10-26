@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Parfums Catalog</title>
+    <style>
+        body {
+            background-color: #f7f3ec;
+            font-family: 'Times New Roman', serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .catalog-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #f7f3ec;
+            border: 2px solid #d4af37;
+            padding: 20px;
+        }
+
+        .catalog-header h1 {
+            text-align: center;
+            letter-spacing: 2px;
+            font-size: 22px;
+            margin-bottom: 30px;
+            color: #2c2c2c;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #c5b358;
+            padding: 15px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .brand-title {
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: #111;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .product-desc {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Tombol Kembali */
+        .back-btn {
+            display: none;
+            margin-bottom: 20px;
+            background-color: #2c2c2c;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            font-family: 'Times New Roman', serif;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+        .back-btn:hover {
+            background-color: #d4af37;
+            color: #000;
+        }
+
+        .catalog-footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #555;
+            border-top: 1px solid #d4af37;
+            padding-top: 15px;
+        }
+
+        /* Styling Modal / Pop-up Harga & Keterangan */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .modal-size {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .modal-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #b8860b;
+            margin: 15px 0;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .buy-btn {
+            background-color: #2c2c2c;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
+
+        .buy-btn:hover {
+            background-color: #d4af37;
+            color: #000;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="catalog-container">
+        <!-- Judul Katalog -->
+        <header class="catalog-header">
+            <h1 id="catalogTitle">LUXURY PARFUMS: SIGNATURE SELECTION</h1>
+        </header>
+
+        <!-- Tombol Kembali ke Menu Utama Brand -->
+        <button id="btnBack" class="back-btn" onclick="tampilMenuUtama()">← Kembali ke Pilihan Brand</button>
+
+        <!-- Grid Katalog (Isinya akan berubah otomatis lewat JavaScript) -->
+        <div id="gridContainer" class="grid-container">
+            <!-- Konten awal dimuat oleh script -->
+        </div>
+
+        <footer class="catalog-footer">
+            <p>LUXURY FRAGRANCES | WWW.CATALOGUE.COM | PAGE 1</p>
+        </footer>
+    </div>
+
+    <!-- Modal / Pop-up Keterangan & Harga Produk -->
+    <div id="modalDetail" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="tutupModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalSize" class="modal-size"></p>
+            <p id="modalPrice" class="modal-price"></p>
+            <p id="modalDesc" class="modal-desc"></p>
+            <button class="buy-btn" onclick="pesanSekarang()">Pesan Sekarang</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Produk dari 3 Brand (Masing-masing berisi 3 produk)
+        const dataBrand = {
+            dior: {
+                namaBrand: "DIOR",
+                produk: [
+                    { nama: "SAUVAGE", ukuran: "Eau de Toilette - 100ml", harga: "Rp 2.150.000", desc: "Parfum pria dengan aroma fresh woody yang maskulin, segar, dan tahan lama.", img: "sauvage.jpg" },
+                    { nama: "J'ADORE", ukuran: "Eau de Parfum - 50ml", harga: "Rp 2.350.000", desc: "Parfum wanita ikonik dengan perpaduan wangi bunga ylang-ylang dan damask rose yang mewah.", img: "jadore.jpg" },
+                    { nama: "MISS DIOR", ukuran: "Eau de Parfum - 50ml", harga: "Rp 2.300.000", desc: "Aroma wewangian bunga segar yang manis, elegan, dan menggambarkan keceriaan.", img: "missdior.jpg" }
+                ]
+            },
+            ysl: {
+                namaBrand: "YSL (Yves Saint Laurent)",
+                produk: [
+                    { nama: "LIBRE", ukuran: "Eau de Parfum - 90ml", harga: "Rp 2.550.000", desc: "Parfum wanita dengan sentuhan floral lavender yang elegan, berani, dan memikat.", img: "libre.jpg" },
+                    { nama: "Y EAU DE TOILETTE", ukuran: "Eau de Toilette - 100ml", harga: "Rp 1.850.000", desc: "Aroma maskulin yang segar dengan paduan sage dan geranium untuk pria modern.", img: "ysl_y.jpg" },
+                    { nama: "BLACK OPIUM", ukuran: "Eau de Parfum - 50ml", harga: "Rp 2.200.000", desc: "Aroma adiktif dari kopi hitam, white flowers, dan vanilla yang hangat dan sensual.", img: "blackopium.jpg" }
+                ]
+            },
+            chanel: {
+                namaBrand: "CHANEL",
+                produk: [
+                    { nama: "CHANEL N°5", ukuran: "Eau de Parfum - 100ml", harga: "Rp 2.600.000", desc: "Parfum legendaris dengan aroma floral-aldehyde yang klasik, mewah, dan tak lekang oleh waktu.", img: "chanel5.jpg" },
+                    { nama: "COCO MADEMOISELLE", ukuran: "Eau de Parfum - 50ml", harga: "Rp 2.300.000", desc: "Aroma oriental yang segar dengan karakter feminin, kuat, dan bebas.", img: "cocomadame.jpg" },
+                    { nama: "BLEU DE CHANEL", ukuran: "Eau de Parfum - 100ml", harga: "Rp 2.250.000", desc: "Parfum aromatic-woody dengan karakter aroma yang dalam, bersih, dan berkelas untuk pria.", img: "bleuchanel.jpg" }
+                ]
+            }
+        };
+
+        // Menampilkan 3 Brand Utama di awal
+        function tampilMenuUtama() {
+            document.getElementById("catalogTitle").innerText = "LUXURY PARFUMS: SIGNATURE SELECTION";
+            document.getElementById("btnBack").style.display = "none";
+            
+            let container = document.getElementById("gridContainer");
+            container.innerHTML = `
+                <div class="product-card" onclick="tampilProdukBrand('dior')">
+                    <div class="brand-title">DIOR</div>
+                    <div class="product-desc">Klik untuk melihat koleksi</div>
+                    <div class="product-image"><img src="sauvage.jpg" alt="Dior"></div>
+                </div>
+                <div class="product-card" onclick="tampilProdukBrand('ysl')">
+                    <div class="brand-title">YSL</div>
+                    <div class="product-desc">Klik untuk melihat koleksi</div>
+                    <div class="product-image"><img src="libre.jpg" alt="YSL"></div>
+                </div>
+                <div class="product-card" onclick="tampilProdukBrand('chanel')">
+                    <div class="brand-title">CHANEL</div>
+                    <div class="product-desc">Klik untuk melihat koleksi</div>
+                    <div class="product-image"><img src="chanel5.jpg" alt="Chanel"></div>
+                </div>
+            `;
+        }
+
+        // Menampilkan 3 Foto Produk dari Brand yang diklik
+        function tampilProdukBrand(keyBrand) {
+            let data = dataBrand[keyBrand];
+            document.getElementById("catalogTitle").innerText = "KOLEKSI BRAND: " + data.namaBrand;
+            document.getElementById("btnBack").style.display = "block";
+
+            let container = document.getElementById("gridContainer");
+            container.innerHTML = "";
+
+            data.produk.forEach(item => {
+                container.innerHTML += `
+                    <div class="product-card" onclick="tampilDetail('${item.nama}', '${item.ukuran}', '${item.harga}', '${item.desc}')">
+                        <div class="brand-title">${data.namaBrand}</div>
+                        <div class="product-name">${item.nama}</div>
+                        <div class="product-desc">${item.ukuran}</div>
+                        <div class="product-image"><img src="${item.img}" alt="${item.nama}"></div>
+                        <div class="product-price">${item.harga}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // Menampilkan Pop-up Detail Harga & Keterangan saat foto produk diklik
+        function tampilDetail(nama, ukuran, harga, deskripsi) {
+            document.getElementById("modalTitle").innerText = nama;
+            document.getElementById("modalSize").innerText = ukuran;
+            document.getElementById("modalPrice").innerText = harga;
+            document.getElementById("modalDesc").innerText = deskripsi;
+            document.getElementById("modalDetail").style.display = "flex";
+        }
+
+        // Menutup Pop-up
+        function tutupModal() {
+            document.getElementById("modalDetail").style.display = "none";
+        }
+
+        // Aksi Pesan
+        function pesanSekarang() {
+            alert("Terima kasih! Pesanan Anda sedang diproses.");
+            tutupModal();
+        }
+
+        // Menutup modal jika klik di luar kotak putih
+        window.onclick = function(event) {
+            let modal = document.getElementById("modalDetail");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Jalankan menu utama saat halaman dimuat pertama kali
+        window.onload = tampilMenuUtama;
+    </script>
+</body>
+</html>
